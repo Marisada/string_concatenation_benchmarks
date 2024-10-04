@@ -1,0 +1,11 @@
+.vscode/
+debug/
+target/
+Cargo.lock
+**/*.rs.bk
+**/*.pdb
+**/*.7z
+**/*.br
+**/*.gz
+**/*.zip
+**/*.tar
