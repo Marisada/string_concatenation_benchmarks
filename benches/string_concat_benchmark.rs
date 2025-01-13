@@ -18,6 +18,11 @@ fn array_concat(a: &str, b: &str, c: &str) -> String {
     [a, b, c].concat()
 }
 
+fn array_concat_mixed(a: &str, b: &str, c: &str) -> String {
+    let bs = b.to_string();
+    [a, &bs, c].concat()
+}
+
 fn array_join(a: &str, b: &str, c: &str) -> String {
     [a, c].join(b)
 }
@@ -26,11 +31,17 @@ fn array_join_long(a: &str, b: &str, c: &str) -> String {
     [a, b, c].join("")
 }
 
+fn array_join_long_mixed(a: &str, b: &str, c: &str) -> String {
+    let bs = b.to_string();
+    [a, &bs, c].join("")
+}
+
 fn collect_from_array_to_string(a: &str, b: &str, c: &str) -> String {
     let list = [a, b, c];
     list.iter().copied().collect()
 }
 
+#[allow(clippy::useless_vec)]
 fn collect_from_vec_to_string(a: &str, b: &str, c: &str) -> String {
     let list = vec![a, b, c];
     list.iter().copied().collect()
@@ -53,6 +64,7 @@ fn mut_string_push_str(a: &str, b: &str, c: &str) -> String {
     datetime
 }
 
+#[allow(clippy::vec_init_then_push)]
 fn mut_string_push_string(a: &str, b: &str, c: &str) -> String {
     let mut datetime = Vec::<String>::new();
     datetime.push(String::from(a));
@@ -130,6 +142,11 @@ fn concat_string_macro(a: &str, b: &str, c: &str) -> String {
     concat_string!(a, b, c)
 }
 
+fn concat_string_macro_mixed(a: &str, b: &str, c: &str) -> String {
+    let bs = b.to_string();
+    concat_string!(a, bs, c)
+}
+
 /// https://crates.io/crates/joinery
 fn joinery(a: &str, b: &str, c: &str) -> String {
     let vec = [a, b, c];
@@ -159,6 +176,10 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("concat_strs_macro", |b| b.iter(|| concat_strs_macro(black_box(DATE), black_box(T), black_box(TIME))));
     c.bench_function("concat_string_macro", |b| b.iter(|| concat_string_macro(black_box(DATE), black_box(T), black_box(TIME))));
     c.bench_function("joinery", |b| b.iter(|| joinery(black_box(DATE), black_box(T), black_box(TIME))));
+
+    c.bench_function("array_concat_mixed", |b| b.iter(|| array_concat_mixed(black_box(DATE), black_box(T), black_box(TIME))));
+    c.bench_function("array_join_long_mixed", |b| b.iter(|| array_join_long_mixed(black_box(DATE), black_box(T), black_box(TIME))));
+    c.bench_function("concat_string_macro_mixed", |b| b.iter(|| concat_string_macro_mixed(black_box(DATE), black_box(T), black_box(TIME))));
 }
 
 criterion_group!(benches, criterion_benchmark);
